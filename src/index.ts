@@ -1,5 +1,6 @@
 import Serverless from "serverless";
 import Plugin from "serverless/classes/Plugin";
+import ref from "./functions/ref";
 
 class MoreVariablesPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -12,15 +13,7 @@ class MoreVariablesPlugin implements Plugin {
         this.serverless = serverless;
         this.hooks = {};
         this.configurationVariablesSources = {
-            ref: {
-                resolve({ params }: { params: unknown[] }) {
-                    if (typeof params[0] !== 'string') {
-                        log.error('Expected resource name as argument to ref()');
-                    } else {
-                        return {value: {Ref: params[0]}};
-                    }
-                }
-            }
+            ref,
         }
     }
 }
