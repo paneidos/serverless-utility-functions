@@ -1,4 +1,4 @@
-import ref from './ref';
+import ref from '../../src/functions/ref';
 
 const callRef = function(...params: unknown[]) {
     return ref.resolve({ params }).value;

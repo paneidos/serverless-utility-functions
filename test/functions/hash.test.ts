@@ -1,4 +1,4 @@
-import hash from "./hash";
+import hash from "../../src/functions/hash";
 
 const callHash = function(type: unknown, data: unknown) {
     return hash.resolve({ params: [type, data] }).value;
