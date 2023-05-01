@@ -13,4 +13,3 @@ describe('ref()', () => {
         expect(() => callRef(null)).toThrow();
     });
 });
-
