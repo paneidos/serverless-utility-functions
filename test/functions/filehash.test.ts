@@ -1,5 +1,4 @@
 import filehash from "../../src/functions/filehash";
-import {fileHash} from "../../src/utils/hash";
 
 const callHash = async function(type: unknown, data: unknown) {
     return (await filehash.resolve({ params: [type, data] })).value;
