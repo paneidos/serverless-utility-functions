@@ -1,10 +1,4 @@
-import { createHash } from "crypto";
-
-function digest(type: string, data: string): string {
-    const hash = createHash(type);
-    hash.update(data, 'utf-8');
-    return hash.digest('hex');
-}
+import {stringHash} from "../utils/hash";
 
 export default {
     resolve({ params: [type, data ] }: { params: unknown[] }) {
@@ -14,6 +8,6 @@ export default {
         if (typeof data !== 'string') {
             throw new Error(`Expected content string as second argument to hash(), got ${typeof data}`);
         }
-        return {value: digest(type, data)};
+        return {value: stringHash(type, data)};
     }
 };
