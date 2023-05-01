@@ -20,5 +20,8 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "globby": "^11"
+  }
 }
