@@ -2,7 +2,7 @@ import Serverless from "serverless";
 import Plugin from "serverless/classes/Plugin";
 import ref from "./functions/ref";
 
-class MoreVariablesPlugin implements Plugin {
+class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
     hooks: Plugin.Hooks;
     variableResolvers: Plugin.VariableResolvers | undefined;
@@ -18,4 +18,4 @@ class MoreVariablesPlugin implements Plugin {
     }
 }
 
-export = MoreVariablesPlugin;
+export = UtilityFunctionsPlugin;
