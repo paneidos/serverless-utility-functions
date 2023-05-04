@@ -2,7 +2,6 @@ import Serverless from "serverless";
 const resolve = require("serverless/lib/configuration/variables/resolve");
 const resolveMeta = require("serverless/lib/configuration/variables/resolve-meta");
 import UtilityFunctionsPlugin from '../../src/index';
-import ref from '../../src/functions/ref';
 
 function buildSls(): Serverless {
     const sls = new Serverless({
@@ -19,12 +18,16 @@ describe('UtilityFunctionsPlugin', () => {
     })
 
     it('provides ref()', async () => {
-        let variablesMeta;
-        let configuration = {
+        // Fetch ref through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const ref = plugin.configurationVariablesSources.ref
+        // Try it out with several variables
+        const configuration = {
             quotedString: "${ref('HttpApi')}",
             unquotedString: "${ref(HttpApi)}",
         };
-        variablesMeta = resolveMeta(configuration);
+        const variablesMeta = resolveMeta(configuration);
         await resolve({
             serviceDir: process.cwd(),
             configuration,
