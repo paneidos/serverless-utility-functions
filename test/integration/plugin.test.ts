@@ -39,4 +39,27 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.quotedString).toEqual({ Ref: 'HttpApi'});
         expect(configuration.unquotedString).toEqual({ Ref: 'HttpApi'});
     })
+
+    it('provides hash()', async () => {
+        // Fetch ref through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const hash = plugin.configurationVariablesSources.hash
+        // Try it out with several variables
+        const configuration = {
+            quotedString: "${hash(sha256, 'foo')}",
+            unquotedString: "${hash(sha256, foo)}",
+        };
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { hash },
+            options: {},
+            fulfilledSources: new Set(['ref']),
+        });
+        expect(configuration.quotedString).toEqual('2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae');
+        expect(configuration.unquotedString).toEqual('2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae');
+    })
 })

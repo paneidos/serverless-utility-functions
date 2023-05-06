@@ -1,6 +1,7 @@
 import Serverless from "serverless";
 import Plugin from "serverless/classes/Plugin";
 import ref from "./functions/ref";
+import hash from "./functions/hash";
 
 class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -14,6 +15,7 @@ class UtilityFunctionsPlugin implements Plugin {
         this.hooks = {};
         this.configurationVariablesSources = {
             ref,
+            hash,
         }
     }
 }
