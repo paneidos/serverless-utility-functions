@@ -87,4 +87,29 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.unquotedString).toEqual('b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c');
         expect(configuration.nonExistent).toEqual('foo');
     })
+
+    it('provides globhash()', async () => {
+        // Fetch globhash through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const globhash = plugin.configurationVariablesSources.globhash
+        // Try it out with several variables
+        const configuration = {
+            quotedString: "${globhash(sha256, 'test/utils/tes*.txt')}",
+            unquotedString: "${globhash(sha256, test/utils/tes*.txt)}",
+            nonExistent: "${globhash(sha256, test/utils/*.nope), 'foo'}",
+        };
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { globhash },
+            options: {},
+            fulfilledSources: new Set(['globhash']),
+        });
+        expect(configuration.quotedString).toEqual('126b9412abedfd5cf1858d6dae571e46b68d298b35934489bb2ccb432ef9ae80');
+        expect(configuration.unquotedString).toEqual('126b9412abedfd5cf1858d6dae571e46b68d298b35934489bb2ccb432ef9ae80');
+        expect(configuration.nonExistent).toEqual('foo');
+    })
 })

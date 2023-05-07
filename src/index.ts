@@ -1,6 +1,7 @@
 import Serverless from "serverless";
 import Plugin from "serverless/classes/Plugin";
 import filehash from "./functions/filehash";
+import globhash from "./functions/globhash";
 import hash from "./functions/hash";
 import ref from "./functions/ref";
 
@@ -18,6 +19,7 @@ class UtilityFunctionsPlugin implements Plugin {
             ref,
             hash,
             filehash,
+            globhash,
         }
     }
 }
