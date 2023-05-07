@@ -7,7 +7,7 @@
   "author": "Sernin van de Krol",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest"
   },
   "devDependencies": {
@@ -20,5 +20,8 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "globby": "^11"
+  }
 }
