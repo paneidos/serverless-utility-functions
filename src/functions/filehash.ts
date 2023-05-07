@@ -8,6 +8,7 @@ export default {
         if (typeof data !== 'string') {
             throw new Error(`Expected path string as second argument to hash(), got ${typeof data}`);
         }
-        return {value: fileHash(type, data)};
+        const value = await fileHash(type, data);
+        return {value };
     }
 };

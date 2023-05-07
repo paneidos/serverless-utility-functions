@@ -25,7 +25,8 @@ describe('hash function', () => {
         await expect(callHash('sha256', null)).rejects.toThrow();
     });
 
-    it('throws on non-existing files', async () => {
-        await expect(callHash('sha256', 'test/utils/non-existent.txt')).rejects.toThrow();
+    it('returns null', async () => {
+        const hash = await callHash('sha256', 'test/utils/non-existent.txt');
+        expect(hash).toBeNull();
     });
 });

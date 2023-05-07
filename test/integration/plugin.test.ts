@@ -41,7 +41,7 @@ describe('UtilityFunctionsPlugin', () => {
     })
 
     it('provides hash()', async () => {
-        // Fetch ref through the plugin
+        // Fetch hash through the plugin
         const sls = buildSls();
         const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
         const hash = plugin.configurationVariablesSources.hash
@@ -57,9 +57,34 @@ describe('UtilityFunctionsPlugin', () => {
             variablesMeta,
             sources: { hash },
             options: {},
-            fulfilledSources: new Set(['ref']),
+            fulfilledSources: new Set(['hash']),
         });
         expect(configuration.quotedString).toEqual('2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae');
         expect(configuration.unquotedString).toEqual('2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae');
+    })
+
+    it('provides filehash()', async () => {
+        // Fetch filehash through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const filehash = plugin.configurationVariablesSources.filehash
+        // Try it out with several variables
+        const configuration = {
+            quotedString: "${filehash(sha256, 'test/utils/test.txt')}",
+            unquotedString: "${filehash(sha256, test/utils/test.txt)}",
+            nonExistent: "${filehash(sha256, test/utils/non-existent.txt), 'foo'}",
+        };
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { filehash },
+            options: {},
+            fulfilledSources: new Set(['filehash']),
+        });
+        expect(configuration.quotedString).toEqual('b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c');
+        expect(configuration.unquotedString).toEqual('b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c');
+        expect(configuration.nonExistent).toEqual('foo');
     })
 })

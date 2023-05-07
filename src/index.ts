@@ -1,7 +1,8 @@
 import Serverless from "serverless";
 import Plugin from "serverless/classes/Plugin";
-import ref from "./functions/ref";
+import filehash from "./functions/filehash";
 import hash from "./functions/hash";
+import ref from "./functions/ref";
 
 class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -16,6 +17,7 @@ class UtilityFunctionsPlugin implements Plugin {
         this.configurationVariablesSources = {
             ref,
             hash,
+            filehash,
         }
     }
 }

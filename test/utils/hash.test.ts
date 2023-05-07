@@ -12,8 +12,9 @@ describe('fileHash', () => {
         expect(hash).toBe('b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c');
     });
 
-    it('throws errors', async () => {
-        await expect(fileHash('sha256', __dirname + '/non-existent.txt')).rejects.toThrow();
+    it('returns null for non-existent files', async () => {
+        const hash = await fileHash('sha256', __dirname + '/non-existent.txt');
+        expect(hash).toBeNull();
     });
 })
 
