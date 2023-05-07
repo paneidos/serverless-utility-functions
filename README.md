@@ -18,3 +18,41 @@ provider:
     DYNAMO_DB_TABLE: ${cf:${provider.stackName}.Table, ref(Table)}
     SECRET: ${ref(Secret)}
 ```
+
+### hash(type, string)
+
+Calculate the hash of the specified type for the specified string.
+Supports any hash that works with the builtin crypto module.
+
+Example usage:
+
+```yaml
+custom:
+  hash: ${hash(sha256, 'your-string')} 
+```
+
+### filehash(type, path)
+
+Calculate the hash of the specified type for the specified file.
+Supports any hash that works with the builtin crypto module.
+Non-existing files result in a null value, which allows chaining.
+
+Example usage:
+
+```yaml
+custom:
+  lastDeployedFrontend: ${filehash(sha256, public/manifest.json)}
+```
+
+### globhash(type, glob)
+
+Calculate the hash of the specified type for the specified files.
+Supports any hash that works with the builtin crypto module.
+If the glob results in an empty set, this will result in a null value, which allows chaining.
+
+Example usage:
+
+```yaml
+custom:
+  migrationVersion: ${globhash(sha256, migrations/*)} 
+```
