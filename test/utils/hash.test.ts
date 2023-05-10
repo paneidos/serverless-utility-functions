@@ -16,6 +16,10 @@ describe('fileHash', () => {
         const hash = await fileHash('sha256', __dirname + '/non-existent.txt');
         expect(hash).toBeNull();
     });
+
+    it('throws an error for directories', async () => {
+        await expect(fileHash('sha256', 'test')).rejects.toThrow();
+    });
 })
 
 describe('globHash', () => {
