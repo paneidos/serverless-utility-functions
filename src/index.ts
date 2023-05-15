@@ -4,6 +4,7 @@ import filehash from "./functions/filehash";
 import globhash from "./functions/globhash";
 import hash from "./functions/hash";
 import ref from "./functions/ref";
+import {fileIf, fileUnless} from "./functions/file-if-unless";
 
 class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -20,6 +21,8 @@ class UtilityFunctionsPlugin implements Plugin {
             hash,
             filehash,
             globhash,
+            fileIf,
+            fileUnless,
         }
     }
 }

@@ -112,4 +112,34 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.unquotedString).toEqual('126b9412abedfd5cf1858d6dae571e46b68d298b35934489bb2ccb432ef9ae80');
         expect(configuration.nonExistent).toEqual('foo');
     })
+
+    it('provides fileIf() and fileUnless()', async () => {
+        // Fetch functions through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const { fileIf, fileUnless } = plugin.configurationVariablesSources;
+        const configuration = {
+            fileIfTrue: "${fileIf(true, test/utils/resource.yml)}",
+            fileIfFalse: "${fileIf(false, 'test/utils/resource.yml')}",
+            fileUnlessTrue: "${fileUnless(true, test/utils/resource.yml)}",
+            fileUnlessFalse: "${fileUnless(false, test/utils/resource.yml)}",
+        }
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { fileIf, fileUnless, file: {
+                async resolve() {
+                    return {value: {foo: 'bar'}}
+                }
+                } },
+            options: {},
+            fulfilledSources: new Set(['fileIf', 'fileUnless', 'file']),
+        });
+        expect(configuration.fileIfFalse).toEqual({});
+        expect(configuration.fileUnlessTrue).toEqual({});
+        expect(configuration.fileIfTrue).toEqual({foo: 'bar'});
+        expect(configuration.fileUnlessFalse).toEqual({foo: 'bar'});
+    });
 })

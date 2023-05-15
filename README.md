@@ -56,3 +56,18 @@ Example usage:
 custom:
   migrationVersion: ${globhash(sha256, migrations/*)} 
 ```
+
+### fileIf(condition, file) & fileUnless(condition, file)
+
+Both functions take a condition that will be passed to strToBool if it's a string.
+If the condition check passes, the builtin file function will be invoked with the specified file and optional address.
+If the condition check doesn't pass, an empty object is returned or null in case an address was given.
+
+Example usage:
+```yaml
+functions:
+  - ${fileIf(${param:debug}, functions/debug.yml)}
+
+provider:
+  runtime: ${fileIf(${param:experimental}, variables.yml):NEW_RUNTIME, 'python3.9'}
+```
