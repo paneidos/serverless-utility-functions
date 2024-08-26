@@ -19,6 +19,27 @@ provider:
     SECRET: ${ref(Secret)}
 ```
 
+### awsId(type, name)
+Reference special ids used for AWS by name.
+Supported types:
+
+- [CachePolicy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html)
+- [OriginRequestPolicy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html)
+- [ResponseHeaderPolicy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html)
+- [HostedZone](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset-aliastarget.html)
+
+Example usage:
+
+```yaml
+resources:
+  CloudFront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          CachePolicyId: ${awsId(CachePolicy):CachingDisabled}
+```
+
 ### hash(type, string)
 
 Calculate the hash of the specified type for the specified string.

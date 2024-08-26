@@ -142,4 +142,27 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.fileIfTrue).toEqual({foo: 'bar'});
         expect(configuration.fileUnlessFalse).toEqual({foo: 'bar'});
     });
+
+    it('provides awsId()', async() => {
+        // Fetch functions through the plugin
+        const sls = buildSls();
+        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const awsId = plugin.configurationVariablesSources.awsId
+        // Try it out with several variables
+        const configuration = {
+            unquotedString: "${awsId(CachePolicy):CachingDisabled}",
+            quotedString: "${awsId('CachePolicy'): CachingDisabled}",
+        };
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { awsId },
+            options: {},
+            fulfilledSources: new Set(['awsId']),
+        });
+        expect(configuration.quotedString).toEqual('4135ea2d-6df8-44a3-9df3-4b5a84be39ad');
+        expect(configuration.unquotedString).toEqual('4135ea2d-6df8-44a3-9df3-4b5a84be39ad');
+    })
 })

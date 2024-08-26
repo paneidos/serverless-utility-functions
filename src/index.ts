@@ -5,6 +5,7 @@ import globhash from "./functions/globhash";
 import hash from "./functions/hash";
 import ref from "./functions/ref";
 import {fileIf, fileUnless} from "./functions/file-if-unless";
+import awsId from "./functions/aws-id";
 
 class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -23,6 +24,7 @@ class UtilityFunctionsPlugin implements Plugin {
             globhash,
             fileIf,
             fileUnless,
+            awsId,
         }
     }
 }
