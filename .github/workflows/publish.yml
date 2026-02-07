@@ -1,19 +1,21 @@
 on:
-    push:
-        branches:
-            - main
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-    publish:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 24
-            - run: yarn
-            - run: yarn build
-            - run: yarn test
-            - uses: JS-DevTools/npm-publish@v2
-              with:
-                  token: ${{ secrets.NPM_TOKEN }}
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
+      - run: npm publish
