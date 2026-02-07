@@ -4,6 +4,11 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:paneidos/serverless-utility-functions.git",
+  "keywords": [
+    "aws",
+    "serverless",
+    "serverless-framework"
+  ],
   "author": "Sernin van de Krol",
   "license": "MIT",
   "scripts": {
