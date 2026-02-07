@@ -6,6 +6,7 @@ import hash from "./functions/hash";
 import ref from "./functions/ref";
 import {fileIf, fileUnless} from "./functions/file-if-unless";
 import awsId from "./functions/aws-id";
+import not from "./functions/not";
 
 class UtilityFunctionsPlugin implements Plugin {
     commands: Plugin.Commands | undefined;
@@ -25,6 +26,7 @@ class UtilityFunctionsPlugin implements Plugin {
             fileIf,
             fileUnless,
             awsId,
+            not,
         }
     }
 }

@@ -3,24 +3,25 @@ const resolve = require("serverless/lib/configuration/variables/resolve");
 const resolveMeta = require("serverless/lib/configuration/variables/resolve-meta");
 import UtilityFunctionsPlugin from '../../src/index';
 
-function buildSls(): Serverless {
+async function buildSls(): Promise<Serverless> {
     const sls = new Serverless({
         commands: [],
         options: {}
     });
+    await sls.init();
     sls.pluginManager.addPlugin(UtilityFunctionsPlugin);
     return sls;
 }
 
 describe('UtilityFunctionsPlugin', () => {
-    it('installs', () => {
-        expect(buildSls()).not.toBeNull();
+    it('installs', async () => {
+        expect(await buildSls()).not.toBeNull();
     })
 
     it('provides ref()', async () => {
         // Fetch ref through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const ref = plugin.configurationVariablesSources.ref
         // Try it out with several variables
         const configuration = {
@@ -42,8 +43,8 @@ describe('UtilityFunctionsPlugin', () => {
 
     it('provides hash()', async () => {
         // Fetch hash through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const hash = plugin.configurationVariablesSources.hash
         // Try it out with several variables
         const configuration = {
@@ -65,8 +66,8 @@ describe('UtilityFunctionsPlugin', () => {
 
     it('provides filehash()', async () => {
         // Fetch filehash through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const filehash = plugin.configurationVariablesSources.filehash
         // Try it out with several variables
         const configuration = {
@@ -90,8 +91,8 @@ describe('UtilityFunctionsPlugin', () => {
 
     it('provides globhash()', async () => {
         // Fetch globhash through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const globhash = plugin.configurationVariablesSources.globhash
         // Try it out with several variables
         const configuration = {
@@ -115,8 +116,8 @@ describe('UtilityFunctionsPlugin', () => {
 
     it('provides fileIf() and fileUnless()', async () => {
         // Fetch functions through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const { fileIf, fileUnless } = plugin.configurationVariablesSources;
         const configuration = {
             fileIfTrue: "${fileIf(true, test/utils/resource.yml)}",
@@ -145,8 +146,8 @@ describe('UtilityFunctionsPlugin', () => {
 
     it('provides awsId()', async() => {
         // Fetch functions through the plugin
-        const sls = buildSls();
-        const plugin = sls.pluginManager.plugins[0] as UtilityFunctionsPlugin;
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
         const awsId = plugin.configurationVariablesSources.awsId
         // Try it out with several variables
         const configuration = {
@@ -165,4 +166,27 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.quotedString).toEqual('4135ea2d-6df8-44a3-9df3-4b5a84be39ad');
         expect(configuration.unquotedString).toEqual('4135ea2d-6df8-44a3-9df3-4b5a84be39ad');
     })
+
+    it('provides not()', async() => {
+        // Fetch functions through the plugin
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
+        const not = plugin.configurationVariablesSources.not
+        // Try it out with several variables
+        const configuration = {
+            unquotedTrue: "${not(false)}",
+            unquotedFalse: "${not(true)}",
+        }
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { not },
+            options: {},
+            fulfilledSources: new Set(['not']),
+        });
+        expect(configuration.unquotedTrue).toEqual(true);
+        expect(configuration.unquotedFalse).toEqual(false);
+    });
 })
