@@ -28,7 +28,7 @@ describe('textIf', () => {
                 address: undefined,
                 resolveVariable: async () => false
             });
-            expect(result.value).toEqual(null);
+            expect(result.value).toBeNull();
         })
 
         it('works with string version of true', async () => {
@@ -54,7 +54,7 @@ describe('textIf', () => {
                 address: undefined,
                 resolveVariable: async () => false
             });
-            expect(result.value).toEqual(null);
+            expect(result.value).toBeNull();
         })
 
         it('returns the resolved value on true', async () => {
@@ -76,7 +76,7 @@ describe('textUnless', () => {
                 address: undefined,
                 resolveVariable: async () => false
             });
-            expect(result.value).toEqual(null);
+            expect(result.value).toBeNull();
         })
 
         it('returns the resolved value on false', async () => {

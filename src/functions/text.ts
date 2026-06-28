@@ -39,7 +39,11 @@ export const textUnless = {
 
 export const text = {
     async resolve({ params: [file] }: ResolveParameter<[string]>): Promise<ResolveResult> {
-        const contents = await readFile(file);
-        return { value: contents.toString() };
+        try {
+            const contents = await readFile(file);
+            return {value: contents.toString()};
+        } catch (error) {
+            return { value: null };
+        }
     }
 }

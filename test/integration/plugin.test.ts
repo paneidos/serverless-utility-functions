@@ -189,4 +189,34 @@ describe('UtilityFunctionsPlugin', () => {
         expect(configuration.unquotedTrue).toEqual(true);
         expect(configuration.unquotedFalse).toEqual(false);
     });
+
+    it('provides text(), textIf() and textUnless()', async () => {
+        // Fetch functions through the plugin
+        const sls = await buildSls();
+        const plugin = sls.pluginManager.plugins.at(-1) as UtilityFunctionsPlugin;
+        const { text, textIf, textUnless } = plugin.configurationVariablesSources;
+        const configuration = {
+            text: "${text(test/utils/test.txt)}",
+            textFallback: "${text(test/utils/non-existent.txt), 'bar'}",
+            textIfTrue: "${textIf(true, test/utils/test.txt), ''}",
+            textIfFalse: "${textIf(false, 'test/utils/test.txt'), ''}",
+            textUnlessTrue: "${textUnless(true, test/utils/test.txt), ''}",
+            textUnlessFalse: "${textUnless(false, test/utils/test.txt), ''}",
+        }
+        const variablesMeta = resolveMeta(configuration);
+        await resolve({
+            serviceDir: process.cwd(),
+            configuration,
+            variablesMeta,
+            sources: { text, textIf, textUnless },
+            options: {},
+            fulfilledSources: new Set(['textIf', 'textUnless', 'text']),
+        });
+        expect(configuration.text).toEqual("foo\n");
+        expect(configuration.textFallback).toEqual("bar");
+        expect(configuration.textIfFalse).toEqual("");
+        expect(configuration.textUnlessTrue).toEqual("");
+        expect(configuration.textIfTrue).toEqual("foo\n");
+        expect(configuration.textUnlessFalse).toEqual("foo\n");
+    });
 })
