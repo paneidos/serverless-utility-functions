@@ -6,7 +6,6 @@ export default {
             return { value: true };
         }
         if (typeof value !== 'boolean') {
-            console.log("Got value:", value);
             throw new Error(`Expected a boolean argument to not(), got ${typeof value}`);
         }
         return {value: !value};
