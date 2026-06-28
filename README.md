@@ -8,6 +8,7 @@ It provides the following generic functions:
 - `filehash`: Calculate the hash of a file.
 - `globhash`: Calculate the hash of multiple files.
 - `fileIf`/`fileUnless`: Conditionally include a file based on a boolean value.
+- `text` / `textIf` / `textUnless`: Include a file as text, useful for e.g. CloudFront function code.
 
 In addition, it provides the following CloudFormation-specific functions:
 - `ref`: Create a ref value for a resource. Useful for chaining with other functions.
@@ -70,6 +71,22 @@ functions:
 
 provider:
   runtime: ${fileIf(${param:experimental}, variables.yml):NEW_RUNTIME, 'python3.9'}
+```
+
+### text(file) & textIf(condition, file) & textUnless(condition, file)
+
+The `text` function can be used to include a file as just text, no special processing.
+The complementary `textIf` and `textUnless` work like their file equivalent,
+but include the file using the `text` function instead.
+
+Example usage:
+```yaml
+resources:
+  Resources:
+    ViewerRequestFunction:
+      Type: AWS::CloudFront::Function
+      Properties:
+        FunctionCode: ${text('viewer-request.js')}
 ```
 
 

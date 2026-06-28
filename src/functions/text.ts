@@ -1,6 +1,7 @@
+import {readFile} from 'fs/promises';
 import {ResolveParameter, ResolveResult} from "./types";
 
-async function resolveFileConditional(
+async function resolveTextConditional(
     condition: unknown,
     invertCondition: boolean,
     file: string,
@@ -17,23 +18,28 @@ async function resolveFileConditional(
         condition = !condition;
     }
     if (condition) {
-        const newAddress = `file(${file})${address ? ':' + address : ''}`;
+        const newAddress = `text(${file})${address ? ':' + address : ''}`;
         const value = await resolveVariable(newAddress);
         return { value };
-    } else if (address) {
-        return { value: null };
     } else {
-        return { value: {} };
+        return { value: null };
     }
 }
 
-export const fileIf = {
+export const textIf = {
     async resolve({ params: [condition, file], address, resolveVariable }: ResolveParameter<[unknown, string]>): Promise<ResolveResult> {
-        return await resolveFileConditional(condition, false, file, address, resolveVariable);
+        return await resolveTextConditional(condition, false, file, address, resolveVariable);
     }
 }
-export const fileUnless = {
+export const textUnless = {
     async resolve({ params: [condition, file], address, resolveVariable }: ResolveParameter<[unknown, string]>): Promise<ResolveResult> {
-        return await resolveFileConditional(condition, true, file, address, resolveVariable);
+        return await resolveTextConditional(condition, true, file, address, resolveVariable);
+    }
+}
+
+export const text = {
+    async resolve({ params: [file] }: ResolveParameter<[string]>): Promise<ResolveResult> {
+        const contents = await readFile(file);
+        return { value: contents.toString() };
     }
 }
